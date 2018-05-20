@@ -42,7 +42,8 @@ function! s:init(file)
   endif
   if a:file !=# ''
     call s:set_up_auto_save(a:file)
-  elseif g:bookmark_manage_per_buffer ==# 0 && g:bookmark_save_per_working_dir ==# 0
+  " elseif g:bookmark_manage_per_buffer ==# 0 && g:bookmark_save_per_working_dir ==# 0 " TODO changed by simlei, test
+  elseif g:bookmark_manage_per_buffer ==# 0
     call BookmarkLoad(s:bookmark_save_file(''), 1, 1)
   endif
 endfunction
@@ -564,6 +565,8 @@ call s:register_mapping('BookmarkMoveToLine', 'mg',  1)
 
 if has('vim_starting')
   autocmd VimEnter * call s:init(expand('<afile>:p'))
-else
+elseif len(expand('%:p')) > 0
   call s:init(expand('%:p'))
+else
+  call s:init(getcwd())
 endif
